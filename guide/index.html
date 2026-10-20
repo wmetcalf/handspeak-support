@@ -1,0 +1,271 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>HandSpeak Helper Guide</title>
+<link rel="icon" href="../icon.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:ital,wght@0,400;0,700;1,400&family=Bricolage+Grotesque:opsz,wght@12..96,600;12..96,800&display=swap">
+<style>
+/* Layout: a single reading column with a sticky contents rail on wide screens; screenshots sit full-width inside the column. */
+:root {
+  --bg: #f6f7f9;
+  --surface: #ffffff;
+  --fg: #1c2330;
+  --muted: #5b6577;
+  --line: #dde1e8;
+  --accent: #1f6fd6;          /* the app's blue */
+  --accent-soft: #e4eefc;
+  --mark: #ffe066;            /* the app's word highlight */
+  --chip: #eceff3;
+  --good: #1f8a4c;
+  --font-display: "Bricolage Grotesque", "Avenir Next", system-ui, sans-serif;
+  --font-body: "Atkinson Hyperlegible", "Verdana", system-ui, sans-serif;
+  color-scheme: light;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: #12161d; --surface: #1a2029; --fg: #e8ecf2; --muted: #9aa5b6; --line: #2c3442;
+    --accent: #6aa8ff; --accent-soft: #1d2b40; --mark: #8a7414; --chip: #262e3a; --good: #5fcf8e;
+    color-scheme: dark;
+  }
+}
+:root[data-theme="dark"] {
+  --bg: #12161d; --surface: #1a2029; --fg: #e8ecf2; --muted: #9aa5b6; --line: #2c3442;
+  --accent: #6aa8ff; --accent-soft: #1d2b40; --mark: #8a7414; --chip: #262e3a; --good: #5fcf8e;
+  color-scheme: dark;
+}
+
+*, *::before, *::after { box-sizing: border-box; }
+img { max-width: 100%; }
+body { margin: 0; background: var(--bg); color: var(--fg); font-family: var(--font-body); font-size: 17px; line-height: 1.6; }
+.page { max-width: 1120px; margin: 0 auto; padding-inline: 20px; padding-block: 40px 80px;
+  display: grid; grid-template-columns: 220px minmax(0, 1fr); gap: 48px; }
+@media (max-width: 860px) { .page { grid-template-columns: minmax(0, 1fr); gap: 24px; padding-block: 24px 60px; } nav.toc { position: static !important; } }
+
+nav.toc { position: sticky; top: calc(env(safe-area-inset-top, 0px) + 24px); align-self: start; font-size: 15px; }
+nav.toc p { font-family: var(--font-display); font-weight: 600; text-transform: uppercase; letter-spacing: .08em; font-size: 12px; color: var(--muted); margin: 0 0 8px; }
+nav.toc ol { list-style: none; margin: 0; padding: 0; display: grid; gap: 2px; }
+nav.toc a { color: var(--fg); text-decoration: none; display: block; padding: 5px 10px; border-radius: 8px; }
+nav.toc a:hover, nav.toc a:focus-visible { background: var(--accent-soft); color: var(--accent); outline: none; }
+@media (max-width: 860px) { nav.toc ol { display: flex; flex-wrap: wrap; gap: 6px; } nav.toc a { background: var(--chip); } }
+
+main { min-width: 0; max-width: 720px; }
+header.hero { padding-bottom: 28px; border-bottom: 1px solid var(--line); margin-bottom: 8px; }
+.eyebrow { font-family: var(--font-display); font-weight: 600; text-transform: uppercase; letter-spacing: .1em; font-size: 12px; color: var(--accent); margin: 0; }
+h1 { font-family: var(--font-display); font-weight: 800; font-size: clamp(34px, 6vw, 52px); line-height: 1.05; letter-spacing: -0.02em; margin: 10px 0 14px; text-wrap: balance; }
+h1 .hl { background: linear-gradient(transparent 58%, var(--mark) 58%); padding: 0 4px; }
+.lede { font-size: 19px; color: var(--muted); margin: 0; max-width: 60ch; }
+h2 { font-family: var(--font-display); font-weight: 800; font-size: 28px; line-height: 1.15; letter-spacing: -0.01em; margin: 56px 0 12px; text-wrap: balance; scroll-margin-top: 20px; }
+h3 { font-family: var(--font-display); font-weight: 600; font-size: 19px; margin: 28px 0 6px; }
+p, li { max-width: 66ch; }
+a { color: var(--accent); }
+strong { font-weight: 700; }
+
+/* App buttons, drawn the way they look on the iPad */
+.btn { display: inline-block; font-weight: 700; font-size: .9em; color: var(--accent); background: var(--chip); border-radius: 999px; padding: 1px 10px; white-space: nowrap; line-height: 1.5; }
+.btn.blue { background: var(--accent); color: var(--surface); }
+.tab { display: inline-block; font-weight: 700; font-size: .9em; border: 1.5px solid var(--line); border-radius: 999px; padding: 0 9px; white-space: nowrap; }
+
+figure { margin: 18px 0 22px; }
+figure img { display: block; width: 100%; height: auto; border-radius: 14px; border: 1px solid var(--line); background: var(--surface); }
+figcaption { font-size: 14px; color: var(--muted); margin-top: 8px; }
+
+ol.steps { counter-reset: s; list-style: none; padding: 0; margin: 14px 0; display: grid; gap: 14px; }
+ol.steps > li { counter-increment: s; position: relative; padding-left: 46px; }
+ol.steps > li::before { content: counter(s); position: absolute; left: 0; top: 0; width: 30px; height: 30px; border-radius: 50%;
+  background: var(--accent-soft); color: var(--accent); font-family: var(--font-display); font-weight: 800; display: grid; place-items: center; font-size: 15px; }
+ul.plain { padding-left: 20px; margin: 10px 0; display: grid; gap: 6px; }
+
+.note { background: var(--surface); border: 1px solid var(--line); border-radius: 14px; padding: 14px 18px; margin: 18px 0; }
+.note p { margin: 0; }
+.note .label { font-family: var(--font-display); font-weight: 600; font-size: 12px; text-transform: uppercase; letter-spacing: .08em; color: var(--good); display: block; margin-bottom: 4px; }
+
+.table-wrap { overflow-x: auto; margin: 14px 0; border: 1px solid var(--line); border-radius: 14px; background: var(--surface); }
+table { border-collapse: collapse; width: 100%; font-size: 15.5px; }
+th, td { text-align: left; vertical-align: top; padding: 10px 14px; border-bottom: 1px solid var(--line); }
+tr:last-child td { border-bottom: 0; }
+th { font-family: var(--font-display); font-weight: 600; font-size: 13px; text-transform: uppercase; letter-spacing: .06em; color: var(--muted); }
+td:first-child { width: 38%; }
+
+footer { margin-top: 64px; padding-top: 20px; border-top: 1px solid var(--line); color: var(--muted); font-size: 14px; }
+@media (prefers-reduced-motion: no-preference) { html { scroll-behavior: smooth; } }
+</style>
+</head>
+<body>
+
+<div class="page">
+  <nav class="toc" aria-label="Contents">
+    <p>Contents</p>
+    <ol>
+      <li><a href="#start">Getting started</a></li>
+      <li><a href="#train">Teach it</a></li>
+      <li><a href="#speak">Write and speak</a></li>
+      <li><a href="#fullscreen">Full screen</a></li>
+      <li><a href="#library">Check samples</a></li>
+      <li><a href="#tune">Settings</a></li>
+      <li><a href="#tips">Tips</a></li>
+      <li><a href="#help">If something's off</a></li>
+    </ol>
+  </nav>
+
+  <main>
+    <header class="hero">
+      <p class="eyebrow"><a href="../index.html">HandSpeak</a> · Helper guide</p>
+      <h1>Helping someone <span class="hl">write to speak</span></h1>
+      <p class="lede">HandSpeak learns one person's handwriting and says out loud what they write. This guide is for the parents, teachers and therapists who set it up and sit beside the writer.</p>
+    </header>
+
+    <section id="start">
+      <h2>Getting started</h2>
+      <p>HandSpeak runs on iPad only. An Apple Pencil works best, but a finger works too.</p>
+      <ol class="steps">
+        <li><strong>Install it.</strong> During testing it comes through Apple's <strong>TestFlight</strong> app. Open the invitation email on the iPad, tap <em>View in TestFlight</em>, then <em>Install</em>. New builds arrive in TestFlight automatically.</li>
+        <li><strong>Open HandSpeak.</strong> The four tabs along the top are <span class="tab">Speak</span> <span class="tab">Train</span> <span class="tab">Library</span> <span class="tab">Tune</span>.</li>
+        <li><strong>Start on Speak.</strong> Even before any training, HandSpeak can read neat handwriting using Apple's built-in reader. Training is what makes it work for handwriting nobody else can read.</li>
+      </ol>
+      <div class="note"><span class="label">Private by design</span><p>Everything stays on the iPad. There are no accounts, no ads and no tracking. Handwriting leaves the iPad only if you share a backup yourself.</p></div>
+    </section>
+
+    <section id="train">
+      <h2>Teach it the writer's handwriting</h2>
+      <p>The <span class="tab">Train</span> tab is where the writer gives examples. Each example is a <strong>sample</strong>. The more samples, the better it reads.</p>
+      <figure>
+        <img src="img/train.jpg" alt="The Train tab: a list of words on the left with sample counts, and a writing area showing the word water written in cursive." width="1180" height="820">
+        <figcaption>Train: pick a word on the left, write it, and tap Save. The number beside each word is how many samples it has.</figcaption>
+      </figure>
+      <ol class="steps">
+        <li><strong>Add things to learn.</strong> Tap <span class="btn">+</span> at the top right. Choose <em>Common phrases</em> (yes, no, help, bathroom…), <em>Lowercase letters a–z</em>, <em>Capital letters A–Z</em>, <em>Numbers 0–9</em>, or <em>Custom item…</em> for their own words and phrases.</li>
+        <li><strong>Pick an item</strong> from the list on the left. The word appears at the top: <em>Write: water</em>.</li>
+        <li><strong>Have the writer write it</strong> in the white box, their own way. Then tap <span class="btn blue">Save</span>. If <em>Save samples automatically</em> is on in Tune, it saves on its own after a short pause, and the countdown number shows how long is left.</li>
+        <li><strong>Repeat.</strong> Aim for 5 to 10 samples per item to start. <span class="btn">Next word</span> moves on; <span class="btn">Undo last sample</span> removes a bad one right away.</li>
+      </ol>
+      <figure>
+        <img src="img/train-add.jpg" alt="The add menu open with Custom item, Capital letters, Lowercase letters, Numbers 0–9 and Common phrases." width="1180" height="820">
+        <figcaption>The + menu. A custom item can be a single word (“water”) and can say something longer (“Can I have some water?”).</figcaption>
+      </figure>
+      <h3>Words teach letters too</h3>
+      <p>When the writer leaves small gaps between letters, every trained word also teaches its letters. That lets HandSpeak read new words it was never trained on, letter by letter. Phrases written across two lines work too. Letters that touch are skipped rather than guessed.</p>
+    </section>
+
+    <section id="speak">
+      <h2>Write and speak</h2>
+      <p>The <span class="tab">Speak</span> tab is where the writer talks. They write in the big box and stop. A blue bar shrinks under the writing and a number counts down the seconds. When it reaches zero, HandSpeak reads the writing and says it.</p>
+      <figure>
+        <img src="img/speak-writing.jpg" alt="The Speak tab with the word water written in the box, a shrinking blue bar and the number 1 counting down." width="1180" height="820">
+        <figcaption>Waiting to read: the bar and the number show the seconds left. Writing more restarts the count.</figcaption>
+      </figure>
+      <figure>
+        <img src="img/speak-spoken.jpg" alt="After reading: Can I have some water? is shown with have highlighted as it is spoken, and a row of choices: water, after, later, vote, male, Other." width="1180" height="820">
+        <figcaption>Spoken. The word being said is highlighted. If it got it wrong, tap the right choice.</figcaption>
+      </figure>
+      <h3>When it guesses wrong</h3>
+      <p>Under the spoken line is <em>Wrong? Tap the right one</em> with other possibilities. Tapping the right one says it and saves that writing as a new sample, so the same mistake gets less likely. If none are right, tap <span class="btn">Other…</span> and type the word.</p>
+      <h3>The buttons</h3>
+      <div class="table-wrap">
+        <table>
+          <thead><tr><th>Button</th><th>What it does</th></tr></thead>
+          <tbody>
+            <tr><td><span class="btn">Undo stroke</span></td><td>Removes the last line drawn.</td></tr>
+            <tr><td><span class="btn">Erase</span></td><td>Clears the writing box.</td></tr>
+            <tr><td><span class="btn">Pause timer</span></td><td>Stops the countdown so the writer can take their time. Tap <em>Resume</em> when they're done.</td></tr>
+            <tr><td><span class="btn">Say again</span></td><td>Repeats the last thing spoken.</td></tr>
+            <tr><td><span class="btn">Full screen</span></td><td>Gives the writer the whole screen (see below).</td></tr>
+            <tr><td><span class="btn">Keyboard</span> <span class="btn">Space</span> <span class="btn">Delete</span> <span class="btn blue">Speak</span> <span class="btn">Clear</span></td><td>For spelling. Letters build up in the <em>Write or type…</em> bar at the top; <em>Speak</em> says the whole message. You can also type into it.</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <section id="fullscreen">
+      <h2>Full screen for the writer</h2>
+      <p>Tap <span class="btn">Full screen</span> to hide the tabs and helper buttons and give the writer almost the whole iPad to write on. The guesses and the message still show above the box.</p>
+      <figure>
+        <img src="img/full-screen.jpg" alt="Full screen: a large empty writing area with Undo stroke, Erase, Pause timer, Say again and Hold for helper view buttons below." width="1180" height="820">
+        <figcaption>Full screen. A quick tap on the last button does nothing, so the writer can't leave by accident.</figcaption>
+      </figure>
+      <p>To get back, <strong>press and hold <span class="btn">Hold for helper view</span> for about a second</strong>. The button fills up while you hold it.</p>
+    </section>
+
+    <section id="library">
+      <h2>Check the samples</h2>
+      <p>The <span class="tab">Library</span> tab lists everything that has been taught. One bad sample, like a stray scribble saved as “yes”, keeps matching the wrong things. Deleting it is the quickest way to improve accuracy.</p>
+      <figure>
+        <img src="img/library.jpg" alt="The Library tab listing words and phrases with their sample counts." width="1180" height="820">
+        <figcaption>Library: tap an item to see every sample of it.</figcaption>
+      </figure>
+      <ul class="plain">
+        <li><strong>Words and phrases</strong>: tap one, then tap a sample to look at it closely and delete it if it's wrong. The caption also says which letters it taught.</li>
+      </ul>
+      <figure>
+        <img src="img/library-word.jpg" alt="The samples of water: nine handwritten copies in a grid, two marked with a green check." width="1180" height="820">
+        <figcaption>One word's samples, newest first. A green check means it was learned from a correction on Speak.</figcaption>
+      </figure>
+      <ul class="plain">
+        <li><strong>Letters and numbers</strong>: letters trained on their own, plus letters learned from words (“3 from words”). Open a letter to see the pieces cut from words, and remove any that aren't really that letter.</li>
+      </ul>
+    </section>
+
+    <section id="tune">
+      <h2>Settings</h2>
+      <p>The <span class="tab">Tune</span> tab holds the settings. The ones you're most likely to change:</p>
+      <div class="table-wrap">
+        <table>
+          <thead><tr><th>Setting</th><th>When to change it</th></tr></thead>
+          <tbody>
+            <tr><td>Pause before recognizing</td><td>How long HandSpeak waits after the writer stops before reading. Longer if they pause mid-word; shorter once they're quick.</td></tr>
+            <tr><td>Confidence to accept without asking</td><td>Lower it and HandSpeak speaks more often without asking; raise it and it shows choices more often.</td></tr>
+            <tr><td>Read untrained handwriting</td><td>Uses Apple's reader for words that haven't been taught. Turn it off if it keeps guessing words the writer didn't mean.</td></tr>
+            <tr><td>Apple Pencil only</td><td>Ignores fingers and a resting palm, so only the Pencil writes.</td></tr>
+            <tr><td>Voice, Speaking rate</td><td>Pick a voice and speed. Enhanced voices can be downloaded in iPad Settings › Accessibility › Spoken Content › Voices.</td></tr>
+            <tr><td>Profiles</td><td>One profile per writer. Each has its own words, samples and settings.</td></tr>
+            <tr><td>Run accuracy test</td><td>Checks each sample against the others and lists the items it confuses most. Collect more samples of those.</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <h3>Back up or share the training</h3>
+      <p>At the bottom of Tune, tap <span class="btn">Back up “Student”</span>, then <span class="btn">Save or send</span>. Choose AirDrop, Save to Files or another app. <span class="btn">Restore from a backup…</span> brings it back, either as a new profile or added to the current one. Backups are also kept in the Files app under <em>On My iPad › HandSpeak › Backups</em>.</p>
+      <figure>
+        <img src="img/tune-backup.jpg" alt="The Tune tab scrolled to Learning, Backup and About sections, with Back up Student and Restore from a backup." width="1180" height="820">
+        <figcaption>Learning shows how many samples and letters it knows; Backup saves everything to one file.</figcaption>
+      </figure>
+    </section>
+
+    <section id="tips">
+      <h2>Tips that help most</h2>
+      <ul class="plain">
+        <li><strong>Collect every version.</strong> Messy, rushed and tired samples are worth more than neat ones, because that's what the writer will produce on a hard day.</li>
+        <li><strong>Only the writer writes.</strong> A helper's handwriting in the samples confuses it. Give each writer their own profile.</li>
+        <li><strong>Correct mistakes when they happen.</strong> Tapping the right choice on Speak is training, and it's the easiest kind.</li>
+        <li><strong>Small gaps between letters</strong> let words teach their letters, so new words can be read without training each one.</li>
+        <li><strong>Start with what matters.</strong> <em>yes</em>, <em>no</em>, <em>help</em> and <em>bathroom</em> first, with 10 or more samples each.</li>
+      </ul>
+    </section>
+
+    <section id="help">
+      <h2>If something's off</h2>
+      <div class="table-wrap">
+        <table>
+          <thead><tr><th>What you see</th><th>Try this</th></tr></thead>
+          <tbody>
+            <tr><td>It says the wrong word</td><td>Tap the right choice under the spoken line. If the same mix-up keeps happening, add samples of both words and check the Library for bad samples.</td></tr>
+            <tr><td>Nothing gets read</td><td>Check for the orange “Timer paused” label and tap <em>Resume</em>.</td></tr>
+            <tr><td>It reads before the writer is done</td><td>Raise <em>Pause before recognizing</em> in Tune, or use <em>Pause timer</em> for long messages.</td></tr>
+            <tr><td>A trained word teaches no letters</td><td>The letters probably touch. Tap a sample in the Library: the caption says how many pieces it found.</td></tr>
+            <tr><td>Stuck in full screen</td><td>Press and hold <em>Hold for helper view</em> for a second.</td></tr>
+            <tr><td>The writing box looks squashed</td><td>Switch to another tab and back. Please tell us what you'd just done so we can fix it.</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <footer>
+      HandSpeak AAC, test build 1.0 (8). Screens shown use the built-in demo profile. Questions or problems: <a href="mailto:handspeak.support@gmail.com">handspeak.support@gmail.com</a> · <a href="../privacy.html">Privacy</a>
+    </footer>
+  </main>
+</div>
+
+</body>
+</html>
